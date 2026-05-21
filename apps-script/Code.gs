@@ -20,7 +20,7 @@
  */
 
 // ---------- CONFIG ----------
-const SHEET_ID   = 'REPLACE_WITH_YOUR_GOOGLE_SHEET_ID';
+const SHEET_ID   = '1JsQxFg894RKRLiKUsuClFWNq8VLvBcL_hD2paPtgw80';
 const SHEET_NAME = 'Orders';
 
 const HEADERS = [
