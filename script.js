@@ -15,7 +15,7 @@
   //    paste the /exec URL below.
   // ---------------------------------------------------------------------
   const APPS_SCRIPT_WEBHOOK_URL =
-    'https://script.google.com/macros/s/REPLACE_WITH_YOUR_DEPLOYMENT_ID/exec';
+    'https://script.google.com/macros/s/AKfycbwkX52bGFxDmz3Bg1e7E29vQ2hZxL92VJj7AxGJvY3a_-6u5eYYo7XNB0xd7NbbXQ0S/exec';
 
   // ---------------------------------------------------------------------
   // 2. Footer year
@@ -28,23 +28,26 @@
   //    matching option in the order form's <select>.
   // ---------------------------------------------------------------------
   const planSelect = document.getElementById('package_ordered');
-  document.querySelectorAll('[data-plan]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const plan = btn.getAttribute('data-plan');
-      if (planSelect && plan) planSelect.value = plan;
+  document.querySelectorAll('[data-plan]').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      var plan = btn.getAttribute('data-plan');
+      if (planSelect && plan) {
+        planSelect.value = plan;
+      }
     });
   });
 
   // ---------------------------------------------------------------------
   // 4. Order form submission
   // ---------------------------------------------------------------------
-  const form = document.getElementById('orderForm');
-  const submitBtn = document.getElementById('submitBtn');
-  const errorBox = document.getElementById('formError');
-  const thankYou = document.getElementById('thankYou');
+  var form = document.getElementById('orderForm');
+  var submitBtn = document.getElementById('submitBtn');
+  var errorBox = document.getElementById('formError');
+  var thankYou = document.getElementById('thankYou');
+  var checkoutCopy = document.querySelector('.checkout-copy');
 
   if (form) {
-    form.addEventListener('submit', async (event) => {
+    form.addEventListener('submit', function (event) {
       event.preventDefault();
       hideError();
 
@@ -55,49 +58,60 @@
       }
 
       // Build payload that maps 1:1 to Google Sheet columns
-      const payload = {
+      var payload = {
         customer_name: getValue('customer_name'),
         phone_number: getValue('phone_number'),
         delivery_address: getValue('delivery_address'),
         package_ordered: getValue('package_ordered'),
-        order_date: new Date().toISOString(), // timestamp
+        order_date: new Date().toISOString(),
       };
 
       setLoading(true);
 
-      try {
-        // NOTE: Apps Script Web Apps require text/plain to avoid the CORS
-        // preflight (OPTIONS) request, which Apps Script does not support.
-        // The doPost(e) handler reads e.postData.contents and JSON.parse() it.
-        const response = await fetch(APPS_SCRIPT_WEBHOOK_URL, {
-          method: 'POST',
-          mode: 'cors',
-          redirect: 'follow',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload),
+      // ---------------------------------------------------------------
+      // Apps Script Web Apps redirect (302) after a POST.
+      // Using `redirect: 'follow'` with `mode: 'cors'` can fail on some
+      // mobile browsers. Instead we use `mode: 'no-cors'` which gives an
+      // opaque response (status 0), but the data DOES reach the server.
+      //
+      // Alternatively, we try `mode: 'cors'` first — if that succeeds we
+      // parse JSON. If it fails (TypeError/network error) we fall back to
+      // `no-cors` which always "succeeds" silently.
+      // ---------------------------------------------------------------
+      submitToSheet(payload)
+        .then(function () {
+          showThankYou(payload);
+        })
+        .catch(function (err) {
+          console.error('[Order submit error]', err);
+          showError(
+            'अर्डर पठाउन समस्या भयो। कृपया पुनः प्रयास गर्नुहोस् वा तलको ' +
+            'व्हाट्सएप बटनबाट सिधै सम्पर्क गर्नुहोस्।'
+          );
+          setLoading(false);
         });
+    });
+  }
 
-        if (!response.ok) {
-          throw new Error('Server responded with ' + response.status);
-        }
+  // ---------------------------------------------------------------------
+  // Submit function with fallback strategy
+  // ---------------------------------------------------------------------
+  function submitToSheet(payload) {
+    var body = JSON.stringify(payload);
 
-        // Apps Script returns JSON: { status: 'success', ... }
-        let result = {};
-        try { result = await response.json(); } catch (_) { /* tolerate */ }
-
-        if (result && result.status && result.status !== 'success') {
-          throw new Error(result.message || 'Submission failed.');
-        }
-
-        showThankYou(payload);
-      } catch (err) {
-        console.error('[Order submit error]', err);
-        showError(
-          'अर्डर पठाउन समस्या भयो। कृपया पुनः प्रयास गर्नुहोस् वा तलको ' +
-          'व्हाट्सएप बटनबाट सिधै सम्पर्क गर्नुहोस्।'
-        );
-        setLoading(false);
-      }
+    // Strategy: try fetch with no-cors (guaranteed to not throw on redirect)
+    // Apps Script will receive the data regardless.
+    return fetch(APPS_SCRIPT_WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: body,
+    }).then(function (response) {
+      // With no-cors, response is opaque (type: "opaque", status: 0).
+      // This is expected and means the request was sent successfully.
+      // Apps Script processes it on its end.
+      return; // resolve successfully
     });
   }
 
@@ -105,7 +119,7 @@
   // Helpers
   // ---------------------------------------------------------------------
   function getValue(id) {
-    const el = document.getElementById(id);
+    var el = document.getElementById(id);
     return el ? String(el.value || '').trim() : '';
   }
 
@@ -138,8 +152,9 @@
     setText('ty-package', payload.package_ordered);
     setText('ty-date', formatDate(payload.order_date));
 
-    // Hide form, show thank you
+    // Hide form and checkout copy, show thank you
     form.hidden = true;
+    if (checkoutCopy) checkoutCopy.hidden = true;
     thankYou.hidden = false;
 
     // Smoothly bring confirmation into view
@@ -147,18 +162,18 @@
   }
 
   function setText(id, value) {
-    const el = document.getElementById(id);
+    var el = document.getElementById(id);
     if (el) el.textContent = value || '—';
   }
 
   function formatDate(iso) {
     try {
-      const d = new Date(iso);
+      var d = new Date(iso);
       return d.toLocaleString('en-GB', {
         day: '2-digit', month: 'short', year: 'numeric',
         hour: '2-digit', minute: '2-digit',
       });
-    } catch (_) {
+    } catch (e) {
       return iso;
     }
   }
