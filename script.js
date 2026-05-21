@@ -15,7 +15,7 @@
   //    paste the /exec URL below.
   // ---------------------------------------------------------------------
   const APPS_SCRIPT_WEBHOOK_URL =
-    'https://script.google.com/macros/s/REPLACE_WITH_YOUR_DEPLOYMENT_ID/exec';
+    'https://script.google.com/macros/s/AKfycbyNXmP7MVWBN5G_X_3Ncb5XHzOvVils5kJU-Axl3mwb3SSripfRhVDgH2kgP7Ogu_TKLg/exec';
 
   // ---------------------------------------------------------------------
   // 2. Footer year
