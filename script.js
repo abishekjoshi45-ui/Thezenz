@@ -14,8 +14,11 @@
   //    After you deploy Code.gs as a Web App (Anyone with link),
   //    paste the /exec URL below.
   // ---------------------------------------------------------------------
+  // IMPORTANT: For public visitors, this MUST be the /exec URL from a
+  // deployed Web App (Deploy > New deployment > Web app, "Anyone" access).
+  // The /dev URL only works for the script owner while logged in.
   const APPS_SCRIPT_WEBHOOK_URL =
-    'https://script.google.com/macros/s/AKfycbwkX52bGFxDmz3Bg1e7E29vQ2hZxL92VJj7AxGJvY3a_-6u5eYYo7XNB0xd7NbbXQ0S/exec';
+    'https://script.google.com/macros/s/AKfycbx-DMxH7NbADEzVTIn5jp8jIv1Ow0XGxHi88k10vKIi/exec';
 
   // ---------------------------------------------------------------------
   // 2. Footer year
