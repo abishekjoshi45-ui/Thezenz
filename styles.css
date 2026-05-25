@@ -247,12 +247,14 @@ ul { list-style: none; padding: 0; margin: 0; }
   margin-bottom: 14px;
   overflow: hidden;
 }
-.hero-product-img {
+.hero-product-img,
+.hero-product-svg {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center top;
   border-radius: var(--radius);
+  display: block;
 }
 .hero-card-meta { display: flex; flex-wrap: wrap; gap: 6px; }
 .badge-soft {
