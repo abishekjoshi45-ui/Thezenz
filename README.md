@@ -1,6 +1,6 @@
 # The Zenz Planter — Sales Landing Page
 
-A mobile-first, conversion-focused landing page for **4 Mukhi (Four-Faced) Buddhachitta saplings** — naturally grown, authentic seed-grown plants from Temal, Kavre.
+A mobile-first, conversion-focused landing page for **3 Mukhi (Three-Faced) Buddhachitta saplings** — naturally grown, authentic seed-grown plants from Nepal.
 
 Static stack: **HTML + CSS + Vanilla JS**. No build step. Deploy anywhere (Netlify, Vercel, GitHub Pages, Hostinger, cPanel — drop the files in).
 
@@ -25,7 +25,7 @@ Static stack: **HTML + CSS + Vanilla JS**. No build step. Deploy anywhere (Netli
 2. **Hero** — Nepali headline, sub-headline, primary CTA + secondary "मूल्य हेर्नुहोस्".
 3. **Dual Value Proposition** — आध्यात्मिक महत्व | वर्षौंसम्मको आम्दानी.
 4. **Offer Block** — Single (Rs. 450) and Bundle of 3 (Rs. 1,099, Best Value, Rs. 251 बचत).
-5. **Trust Badges** — 4 horizontal badges (Temal origin, 4 Mukhi guarantee, healthy stock, COD).
+5. **Trust Badges** — 4 horizontal badges (Nepali native origin, 3 Mukhi guarantee, healthy stock, COD).
 6. **Checkout Form** — Minimal 4 fields (Name, Phone, Address, Package).
 7. **Sticky Floating CTA** — "व्हाट्सएप वा फोनबाट सिधै अर्डर गर्न यहाँ थिच्नुहोस्".
 
